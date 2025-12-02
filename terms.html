@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms and Conditions - Automobile Gallery</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="logo">Automobile Gallery</div>
+            <div class="hamburger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul id="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="booking.html">Book Now</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+                <li><a href="help.html">Help</a></li>
+                <li><a href="feedback.html">Feedback</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Terms and Conditions</h1>
+            <p>Please read these terms and conditions carefully before booking our services.</p>
+        </section>
+
+        <section class="services-overview">
+            <h2>General Terms</h2>
+            <p>By booking a service with Automobile Gallery, you agree to the following terms:</p>
+            <ul>
+                <li>All services are subject to availability and confirmation.</li>
+                <li>Customers must provide accurate information about their vehicle, including model and number.</li>
+                <li>Pick-up and drop-off services are available at an additional cost.</li>
+                <li>Home service is provided at the customer's risk, and we are not liable for any damages during transportation.</li>
+                <li>Payments must be made in full before service completion.</li>
+                <li>We reserve the right to cancel or reschedule services due to unforeseen circumstances.</li>
+            </ul>
+
+            <h2>Liability</h2>
+            <p>Automobile Gallery is not responsible for any loss or damage to personal property during service. Customers are advised to remove valuables from their vehicles.</p>
+
+            <h2>Contact Us</h2>
+            <p>If you have any questions about these terms, please contact us at contact@automobilegallery.com.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Automobile Gallery, established by owner Kartik Sawarkar, All rights reserved.</p>
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('nav-menu');
+            menu.classList.toggle('open');
+        }
+    </script>
+</body>
+
+</html>

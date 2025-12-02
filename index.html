@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Bike Garage Services - Home</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <i class="fas fa-wrench"></i> Bike Garage Pro
+            </div>
+            <div class="hamburger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul id="nav-menu">
+                <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="services.html"><i class="fas fa-tools"></i> Services</a></li>
+                <li><a href="booking.html"><i class="fas fa-calendar-check"></i> Book Now</a></li>
+                <li><a href="contact.html"><i class="fas fa-phone"></i> Contact Us</a></li>
+                <li><a href="help.html"><i class="fas fa-question-circle"></i> Help</a></li>
+                <li><a href="feedback.html"><i class="fas fa-star"></i> Feedback</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1 class="animate-text">Welcome to AUTOMOBILE GALLERY Bike Garage Services</h1>
+                <p class="animate-fade">Expert bike maintenance and repair services at your doorstep. Certified mechanics with genuine parts.</p>
+                <div class="hero-stats">
+                    <div class="stat animate-bounce">
+                        <h3>3000+</h3>
+                        <p>Happy Customers</p>
+                    </div>
+                    <div class="stat animate-bounce">
+                        <h3>3S+</h3>
+                        <p>Years Experience</p>
+                    </div>
+                    <div class="stat animate-bounce">
+                        <h3>24/7</h3>
+                        <p>Emergency Service</p>
+                    </div>
+                </div>
+                <a href="booking.html" class="cta-button animate-float">Book Service Now</a>
+            </div>
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Professional Bike Service" class="animate-float">
+            </div>
+        </section>
+
+        <section class="services-overview">
+            <h2 class="animate-slide-left">Our Premium Services</h2>
+            <p class="animate-fade">Comprehensive bike maintenance using genuine parts and advanced equipment</p>
+
+            <div class="services-grid">
+                <div class="service-card animate-slide-left">
+                    <div class="service-icon">
+                        <i class="fas fa-oil-can"></i>
+                    </div>
+                    <h3>Oil Change</h3>
+                    <p>Premium synthetic oil change with filter replacement</p>
+                    <div class="price">₹299</div>
+                </div>
+
+                <div class="service-card animate-slide-right">
+                    <div class="service-icon">
+                        <i class="fas fa-car-battery"></i>
+                    </div>
+                    <h3>Battery Service</h3>
+                    <p>Check, replace, and maintain bike batteries</p>
+                    <div class="price">₹999</div>
+                </div>
+
+                <div class="service-card animate-slide-left">
+                    <div class="service-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3>Engine Tune-up</h3>
+                    <p>Complete engine maintenance and optimization</p>
+                    <div class="price">₹4999</div>
+                </div>
+
+                <div class="service-card animate-slide-right">
+                    <div class="service-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h3>General Service</h3>
+                    <p>Complete bike servicing and inspection</p>
+                    <div class="price">₹299</div>
+                </div>
+            </div>
+
+            <a href="services.html" class="cta-button animate-bounce">View All Services</a>
+        </section>
+
+        <section class="why-choose-us">
+            <h2 class="animate-slide-left">Why Choose Bike Garage Pro?</h2>
+            <div class="features-grid">
+                <div class="feature animate-fade">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Certified Mechanics</h3>
+                    <p>Expert technicians with years of experience</p>
+                </div>
+                <div class="feature animate-fade">
+                    <i class="fas fa-clock"></i>
+                    <h3>Quick Service</h3>
+                    <p>Fast turnaround without compromising quality</p>
+                </div>
+                <div class="feature animate-fade">
+                    <i class="fas fa-home"></i>
+                    <h3>Doorstep Service</h3>
+                    <p>Convenient service at your location</p>
+                </div>
+                <div class="feature animate-fade">
+                    <i class="fas fa-tags"></i>
+                    <h3>Genuine Parts</h3>
+                    <p>Only authentic OEM parts used</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Bike Garage Pro, established by owner Kartik Sawarkar. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('nav-menu');
+            menu.classList.toggle('open');
+        }
+
+        // Add scroll animations
+        window.addEventListener('scroll', function() {
+            const elements = document.querySelectorAll('.animate-fade, .animate-slide-left, .animate-slide-right, .animate-bounce');
+            elements.forEach(element => {
+                const position = element.getBoundingClientRect().top;
+                const screenHeight = window.innerHeight;
+                if (position < screenHeight - 100) {
+                    element.style.animationPlayState = 'running';
+                }
+            });
+        });
+
+        // Trigger animations on load
+        window.addEventListener('load', function() {
+            const elements = document.querySelectorAll('.animate-text, .animate-float');
+            elements.forEach(element => {
+                element.style.animationPlayState = 'running';
+            });
+        });
+    </script>
+</body>
+
+</html>

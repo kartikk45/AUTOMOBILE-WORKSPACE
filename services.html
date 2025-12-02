@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Services - Automobile Gallery</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="logo">Automobile Gallery</div>
+            <div class="hamburger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul id="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="booking.html">Book Now</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+                <li><a href="help.html">Help</a></li>
+                <li><a href="feedback.html">Feedback</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Our Services Available at Home</h1>
+            <p>We bring professional garage services right to your doorstep.</p>
+        </section>
+
+        <section class="services-list">
+            <h2>Services We Offer</h2>
+            <div class="service-item">
+                <h3>Oil Change</h3>
+                <p>Complete oil change with multiple high-quality oils and filters.</p>
+                <p>Price: ₹299 only</p>
+                <a href="booking.html?Oil Change" class="cta-button">Book Now</a>
+            </div>
+            <div class="service-item">
+                <h3>EV Service & Repair </h3>
+                <p>Wiring and Software checking,motor service, or replace spare & wheel service.</p>
+                <p>Price: ₹299 - ₹499</p>
+                <a href="booking.html?EV Service & Repair" class="cta-button">Book Now</a>
+            </div>
+            <div class="service-item">
+                <h3> Inspection & Repair or servicing </h3>
+                <p>Check and repair brake pads & wheel service, Engine, and fluid.</p>
+                <p>Price: ₹299</p>
+                <a href="booking.html?service=brake-inspection" class="cta-button">Book Now</a>
+            </div>
+            <div class="service-item">
+                <h3>Battery Check & Replacement</h3>
+                <p>Test battery health and replace if necessary & charging /tune-up.</p>
+                <p>Price: ₹999 only</p>
+                <a href="booking.html?service=battery-check" class="cta-button">Book Now</a>
+            </div>
+            <div class="service-item">
+                <h3>Engine Tune-Up</h3>
+                <p>Rebuild/Comprehensive engine maintenance and tuning.</p>
+                <p>Price: ₹2999-₹7000</p>
+                <a href="booking.html?service=engine-tune-up" class="cta-button">Book Now</a>
+            </div>
+            <div class="service-item">
+                <h3>spare/cables changing </h3>
+                <p>Replace spare and cables for better performance.</p>
+                <p>Price: All wholseal rate available with 20% discount </p>
+                <a href="booking.html?spare/cables changing=" class="cta-button">Book Now</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Automobile Gallery, estiblished by ownor kartik sawarkar, All rights reserved.</p>
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('nav-menu');
+            menu.classList.toggle('open');
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Now - Automobile Gallery</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="logo">Automobile Gallery</div>
+            <div class="hamburger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul id="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="booking.html">Book Now</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+                <li><a href="help.html">Help</a></li>
+                <li><a href="feedback.html">Feedback</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <form action="#" method="post">
+            <h2>Book Your Service</h2>
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" required>
+            </div>
+            <div class="form-group">
+                <label for="bike-model">Bike Model</label>
+                <input type="text" id="bike-model" name="bike-model" required>
+            </div>
+            <div class="form-group">
+                <label for="bike-number">Bike Number</label>
+                <input type="text" id="bike-number" name="bike-number" required>
+            </div>
+            <div class="form-group">
+                <label>Additional Options</label>
+                <div>
+                    <input type="checkbox" id="pickup" name="pickup">
+                    <label for="pickup">Pick-up Facility</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="dropoff" name="dropoff">
+                    <label for="dropoff">Drop-off Facility</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="home-service" name="home-service">
+                    <label for="home-service">Home Service</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="service">Select Services</label>
+                <select id="service" name="service" required>
+                    <option value="">Choose a service</option>
+                    <option value="oil-change">Oil Change</option>
+                    <option value="EV Service & Repair">EV Service & Repair</option>
+                    <option value="Inspection & Repair or servicing">Inspection & Repair or servicing</option>
+                    <option value="battery-check & Replacement">Battery Check & Replacement</option>
+                    <option value="engine-tune-up">Engine Tune-Up</option>
+                    <option value="spare/cables changing">spare/cables changing</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="date">Preferred Date</label>
+                <input type="date" id="date" name="date" required>
+            </div>
+            <div class="form-group">
+                <label for="time">Preferred Time</label>
+                <input type="time" id="time" name="time" required>
+            </div>
+            <div class="form-group">
+                <label for="address">Address</label>
+                <textarea id="address" name="address" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="message">Additional Message</label>
+                <textarea id="message" name="message" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" id="terms" name="terms" required>
+                <label for="terms">I agree to the <a href="terms.html" target="_blank">Terms and Conditions</a></label>
+            </div>
+            <button type="submit">Book Now</button>
+        </form>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Automobile Gallery, estiblished by ownor kartik sawarkar, All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Function to get URL parameter
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        // Pre-select service if URL parameter is present
+        window.addEventListener('DOMContentLoaded', function() {
+            var serviceParam = getUrlParameter('service');
+            if (serviceParam) {
+                var select = document.getElementById('service');
+                select.value = serviceParam;
+            }
+        });
+
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+
+            // Collect booking data
+            const bookingData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                bikeModel: document.getElementById('bike-model').value,
+                bikeNumber: document.getElementById('bike-number').value,
+                service: document.getElementById('service').value,
+                date: document.getElementById('date').value,
+                time: document.getElementById('time').value,
+                address: document.getElementById('address').value,
+                message: document.getElementById('message').value
+            };
+
+            // Store booking data in localStorage
+            localStorage.setItem('bookingData', JSON.stringify(bookingData));
+
+            // Redirect to payment page
+            window.location.href = 'payment.html';
+        });
+
+        function toggleMenu() {
+            const menu = document.getElementById('nav-menu');
+            menu.classList.toggle('open');
+        }
+    </script>
+</body>
+
+</html>

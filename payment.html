@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - Automobile Gallery</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="logo">Automobile Gallery</div>
+            <div class="hamburger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul id="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="booking.html">Book Now</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+                <li><a href="help.html">Help</a></li>
+                <li><a href="feedback.html">Feedback</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="booking-summary">
+            <h2>Booking Summary</h2>
+            <div id="summary-details">
+                <!-- Booking details will be populated here -->
+            </div>
+        </section>
+
+        <section id="payment-section">
+            <h2>Advance Payment (50% of Service Cost)</h2>
+            <p id="advance-amount">Amount to Pay: ₹0</p>
+            <p>Click the button below to proceed with UPI payment:</p>
+            <button id="pay-with-qr">Pay with UPI</button>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Automobile Gallery, established by owner Kartik Sawarkar, All rights reserved.</p>
+    </footer>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        // Service prices mapping
+        const servicePrices = {
+            'oil-change': 299,
+            'EV Service & Repair': 399, // Average of 299-499
+            'Inspection & Repair or servicing': 299,
+            'battery-check & Replacement': 999,
+            'engine-tune-up': 4999, // Average of 2999-7000
+            'spare/cables changing': 500 // Placeholder, as it's wholesale with discount
+        };
+
+        // Function to get URL parameter
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        let bookingData;
+        let advanceAmount;
+
+        // Load booking details from localStorage
+        window.addEventListener('DOMContentLoaded', function() {
+            bookingData = JSON.parse(localStorage.getItem('bookingData'));
+            if (!bookingData) {
+                alert('No booking data found. Please go back to booking page.');
+                window.location.href = 'booking.html';
+                return;
+            }
+
+            // Display booking summary
+            const summaryDetails = document.getElementById('summary-details');
+            summaryDetails.innerHTML = `
+                <p><strong>Name:</strong> ${bookingData.name}</p>
+                <p><strong>Email:</strong> ${bookingData.email}</p>
+                <p><strong>Phone:</strong> ${bookingData.phone}</p>
+                <p><strong>Bike Model:</strong> ${bookingData.bikeModel}</p>
+                <p><strong>Bike Number:</strong> ${bookingData.bikeNumber}</p>
+                <p><strong>Service:</strong> ${bookingData.service}</p>
+                <p><strong>Date:</strong> ${bookingData.date}</p>
+                <p><strong>Time:</strong> ${bookingData.time}</p>
+                <p><strong>Address:</strong> ${bookingData.address}</p>
+                <p><strong>Message:</strong> ${bookingData.message || 'N/A'}</p>
+                <p><strong>Full Service Price:</strong> ₹${servicePrices[bookingData.service] || 0}</p>
+            `;
+
+            // Calculate advance payment (50%)
+            const fullPrice = servicePrices[bookingData.service] || 0;
+            advanceAmount = Math.ceil(fullPrice / 2);
+            document.getElementById('advance-amount').textContent = `Amount to Pay: ₹${advanceAmount}`;
+
+            // Initialize Razorpay payment
+            initializePayment();
+        });
+
+        function initializePayment() {
+            const options = {
+                key: 'rzp_test_YOUR_KEY_HERE', // Replace with your Razorpay test key
+                amount: advanceAmount * 100, // Amount in paisa
+                currency: 'INR',
+                name: 'Automobile Gallery',
+                description: 'Advance Payment for Service Booking',
+                image: 'https://example.com/logo.png', // Optional
+                handler: function(response) {
+                    // Payment successful
+                    alert('Payment successful! Payment ID: ' + response.razorpay_payment_id);
+                    // Here you would typically send the payment details to your server
+                    // For now, we'll simulate confirmation
+                    confirmBooking();
+                },
+                prefill: {
+                    name: bookingData.name,
+                    email: bookingData.email,
+                    contact: bookingData.phone
+                },
+                theme: {
+                    color: '#3399cc'
+                },
+                method: {
+                    upi: true,
+                    card: false,
+                    netbanking: false,
+                    wallet: false
+                }
+            };
+
+            const rzp = new Razorpay(options);
+
+            // Show QR code option
+            document.getElementById('pay-with-qr').addEventListener('click', function() {
+                rzp.open();
+            });
+        }
+
+        function confirmBooking() {
+            alert('Payment confirmed! Your booking is confirmed.');
+            // Clear localStorage and redirect
+            localStorage.removeItem('bookingData');
+            window.location.href = 'index.html';
+        }
+
+        function toggleMenu() {
+            const menu = document.getElementById('nav-menu');
+            menu.classList.toggle('open');
+        }
+    </script>
+</body>
+
+</html>
