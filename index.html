@@ -1346,34 +1346,45 @@
             });
         });
 
-        // Default advertisement data
-        const defaultAdvertisement = {
-            enabled: true,
-            title: '🎉 Get 20% Off on First Service!',
-            desc: 'Book your first service and avail 20% discount! Limited time offer.',
-            btnText: 'Book Now',
-            btnLink: 'booking.html',
-            bgColor: 'linear-gradient(135deg, #ff2a2a, #e02424)',
-            imageUrl: ''
+        // Default data
+        const defaultData = {
+            stats: {
+                customers: '5000+',
+                experience: '10+',
+                mechanics: '15+',
+                rating: '4.9'
+            },
+            advertisement: {
+                enabled: true,
+                title: '🎉 Get 20% Off on First Service!',
+                desc: 'Book your first service and avail 20% discount! Limited time offer.',
+                btnText: 'Book Now',
+                btnLink: 'booking.html',
+                bgColor: 'linear-gradient(135deg, #ff2a2a, #e02424)',
+                imageUrl: ''
+            }
         };
+
+        function getData() {
+            const stored = localStorage.getItem('autoGalleryData');
+            return stored ? JSON.parse(stored) : defaultData;
+        }
+
+        // Load Stats from localStorage
+        function loadStats() {
+            const data = getData();
+            const stats = data.stats || defaultData.stats;
+
+            document.querySelector('.stat-item:nth-child(1) .stat-number').textContent = stats.customers;
+            document.querySelector('.stat-item:nth-child(2) .stat-number').textContent = stats.experience;
+            document.querySelector('.stat-item:nth-child(3) .stat-number').textContent = stats.mechanics;
+            document.querySelector('.stat-item:nth-child(4) .stat-number').textContent = stats.rating;
+        }
 
         // Load Advertisement from localStorage or use default
         function loadAdvertisement() {
-            let adData = defaultAdvertisement;
-
-            const stored = localStorage.getItem('autoGalleryData');
-            if (stored) {
-                try {
-                    const data = JSON.parse(stored);
-                    if (data.advertisement) {
-                        adData = {...defaultAdvertisement,
-                            ...data.advertisement
-                        };
-                    }
-                } catch (e) {
-                    console.log('Using default advertisement');
-                }
-            }
+            const data = getData();
+            let adData = data.advertisement || defaultData.advertisement;
 
             if (adData.enabled) {
                 const banner = document.getElementById('advertisement-banner');
@@ -1400,7 +1411,10 @@
         }
 
         // Load ad on page load
-        window.addEventListener('load', loadAdvertisement);
+        window.addEventListener('load', function() {
+            loadStats();
+            loadAdvertisement();
+        });
     </script>
 </body>
 
