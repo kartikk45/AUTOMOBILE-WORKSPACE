@@ -701,7 +701,108 @@
     </div>
 
     <script>
+        // Default data
+        const defaultData = {
+            bikeServices: [{
+                name: 'Bike General Service',
+                desc: 'Full bike servicing with engine tune-up, brake check, and tire inspection.',
+                price: '₹249',
+                enabled: true
+            }, {
+                name: 'Bike Chain Replacement',
+                desc: 'Chain and sprocket replacement for smooth bike operation.',
+                price: '₹999',
+                enabled: true
+            }, {
+                name: 'Bike Oil Change',
+                desc: 'Engine oil replacement and filter change for optimal performance.',
+                price: '₹389',
+                enabled: true
+            }, {
+                name: 'Bike Brake Service',
+                desc: 'Brake pad replacement and adjustment for safety.',
+                price: '₹399',
+                enabled: true
+            }, {
+                name: 'Bike Suspension Repair',
+                desc: 'Suspension system repair and adjustment.',
+                price: '₹400',
+                enabled: true
+            }],
+            evServices: [{
+                name: 'EV Scooter Repair',
+                desc: 'Specialized repair for electric scooters including battery and motor diagnostics.',
+                price: '₹499',
+                enabled: true
+            }, {
+                name: 'EV Battery Service',
+                desc: 'Battery testing and replacement for EVs.',
+                price: '₹199',
+                enabled: true
+            }, {
+                name: 'EV Motor Repair',
+                desc: 'Motor diagnostics and repair for electric vehicles.',
+                price: '₹349',
+                enabled: true
+            }, {
+                name: 'EV Charging Port Repair',
+                desc: 'Charging port diagnostics and repair.',
+                price: '₹649',
+                enabled: true
+            }]
+        };
+
+        function getData() {
+            const stored = localStorage.getItem('autoGalleryData');
+            return stored ? JSON.parse(stored) : defaultData;
+        }
+
+        function loadServices() {
+            const data = getData();
+
+            // Load bike services
+            const bikeContainer = document.getElementById('bike-category').querySelector('.services-grid');
+            let bikeHtml = '';
+            data.bikeServices.forEach(service => {
+                if (service.enabled !== false) {
+                    bikeHtml += `<div class="service-card">
+                        <div class="service-card-header">
+                            <div class="service-icon"><i class="fas fa-wrench"></i></div>
+                            <h3>${service.name}</h3>
+                        </div>
+                        <p>${service.desc}</p>
+                        <div class="pricing-table">
+                            <div class="pricing-row"><span class="pricing-amount">${service.price}</span></div>
+                        </div>
+                        <a href="booking.html" class="btn btn-primary"><i class="fas fa-calendar-check"></i> Book Now</a>
+                    </div>`;
+                }
+            });
+            bikeContainer.innerHTML = bikeHtml || '<p>No bike services available.</p>';
+
+            // Load EV services
+            const evContainer = document.getElementById('ev-category').querySelector('.services-grid');
+            let evHtml = '';
+            data.evServices.forEach(service => {
+                if (service.enabled !== false) {
+                    evHtml += `<div class="service-card">
+                        <div class="service-card-header">
+                            <div class="service-icon"><i class="fas fa-wrench"></i></div>
+                            <h3>${service.name}</h3>
+                        </div>
+                        <p>${service.desc}</p>
+                        <div class="pricing-table">
+                            <div class="pricing-row"><span class="pricing-amount">${service.price}</span></div>
+                        </div>
+                        <a href="booking.html" class="btn btn-primary"><i class="fas fa-calendar-check"></i> Book Now</a>
+                    </div>`;
+                }
+            });
+            evContainer.innerHTML = evHtml || '<p>No EV services available.</p>';
+        }
+
         window.addEventListener('load', function() {
+            loadServices();
             setTimeout(function() {
                 document.getElementById('loading-overlay').classList.add('hidden');
             }, 800);
