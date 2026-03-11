@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Automobile Gallery</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+         :root {
+            --primary: #ff2a2a;
+            --primary-dark: #e02424;
+            --dark: #1a1a1a;
+            --light: #ffffff;
+            --gray: #f5f5f5;
+            --text: #333333;
+            --text-light: #666666;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: var(--text);
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            padding: 15px 30px;
+            color: var(--light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo-icon i {
+            color: var(--light);
+            font-size: 1.2rem;
+        }
+        
+        header h1 {
+            color: var(--light);
+            font-size: 1.3rem;
+            margin: 0;
+        }
+        
+        .admin-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .logout-btn {
+            padding: 8px 20px;
+            background: var(--primary);
+            color: var(--light);
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background: var(--primary-dark);
+        }
+        /* Mobile Menu Button */
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+        }
+        
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+        
+        .admin-container {
+            display: flex;
+            min-height: calc(100vh - 70px);
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: var(--dark);
+            padding: 30px 0;
+            color: var(--light);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px 25px;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: var(--primary);
+            color: var(--light);
+        }
+        
+        .sidebar-menu a i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+        
+        .section-title {
+            color: var(--dark);
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
+        
+        .card {
+            background: var(--light);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--gray);
+        }
+        
+        .card-header h3 {
+            color: var(--primary);
+            font-size: 1.3rem;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            color: var(--text);
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .btn-save {
+            padding: 12px 30px;
+            background: linear-gradient(45deg, var(--primary), var(--primary-dark));
+            color: var(--light);
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 42, 42, 0.4);
+        }
+        
+        .btn-add {
+            padding: 10px 20px;
+            background: #28a745;
+            color: var(--light);
+            border: none;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-add:hover {
+            background: #218838;
+        }
+        
+        .btn-delete {
+            padding: 8px 15px;
+            background: #dc3545;
+            color: var(--light);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        
+        .btn-delete:hover {
+            background: #c82333;
+        }
+        
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: var(--gray);
+            border-radius: 10px;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 30px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+        
+        input:checked+.toggle-slider {
+            background-color: var(--primary);
+        }
+        
+        input:checked+.toggle-slider:before {
+            transform: translateX(30px);
+        }
+        
+        .toggle-label {
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .service-item {
+            background: var(--gray);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .service-item .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .stat-item {
+            background: var(--gray);
+            padding: 20px;
+            border-radius: 12px;
+        }
+        
+        .stat-item label {
+            display: block;
+            color: var(--text-light);
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .stat-item input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .tab-btn {
+            padding: 12px 25px;
+            background: var(--gray);
+            border: 2px solid transparent;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+        
+        .tab-btn.active {
+            background: var(--primary);
+            color: var(--light);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .success-msg {
+            position: fixed;
+            top: 90px;
+            right: 30px;
+            background: #28a745;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            display: none;
+            animation: slideIn 0.3s ease;
+            z-index: 1001;
+        }
+        
+        .success-msg.show {
+            display: block;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            .admin-info span {
+                display: none;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: -280px;
+                width: 280px;
+                height: 100vh;
+                z-index: 1001;
+                transition: left 0.3s ease;
+                display: block;
+            }
+            .sidebar.active {
+                left: 0;
+            }
+            .sidebar-overlay.active {
+                display: block;
+            }
+            .header-left h1 {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="header-left">
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()"><i class="fas fa-bars"></i></button>
+            <div class="logo-icon"><i class="fas fa-car"></i></div>
+            <h1>Admin Dashboard</h1>
+        </div>
+        <div class="admin-info">
+            <span><i class="fas fa-user-shield"></i> Welcome, Admin</span>
+            <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+    </header>
+    <div class="sidebar-overlay" onclick="toggleMobileMenu()"></div>
+    <div class="success-msg" id="successMsg"><i class="fas fa-check-circle"></i> Changes saved successfully!</div>
+    <div class="admin-container">
+        <nav class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="#" class="active" onclick="showSection('services')"><i class="fas fa-tools"></i> Services</a></li>
+                <li><a href="#" onclick="showSection('advertisement')"><i class="fas fa-bullhorn"></i> Advertisement</a></li>
+                <li><a href="#" onclick="showSection('testimonials')"><i class="fas fa-comments"></i> Testimonials</a></li>
+                <li><a href="#" onclick="showSection('team')"><i class="fas fa-users"></i> Team Members</a></li>
+                <li><a href="#" onclick="showSection('stats')"><i class="fas fa-chart-bar"></i> Stats</a></li>
+                <li><a href="#" onclick="showSection('about')"><i class="fas fa-info-circle"></i> About</a></li>
+            </ul>
+        </nav>
+        <main class="main-content">
+            <section id="services-section" class="tab-content active">
+                <h2 class="section-title"><i class="fas fa-tools"></i> Manage Services</h2>
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="showServiceTab('bike')"><i class="fas fa-motorcycle"></i> Bike Services</button>
+                    <button class="tab-btn" onclick="showServiceTab('ev')"><i class="fas fa-bolt"></i> EV Services</button>
+                </div>
+                <div id="bike-services" class="tab-content active">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-motorcycle"></i> Bike Services</h3>
+                            <button class="btn-add" onclick="addBikeService()"><i class="fas fa-plus"></i> Add Service</button>
+                        </div>
+                        <div id="bike-services-form"></div>
+                        <button class="btn-save" onclick="saveBikeServices()"><i class="fas fa-save"></i> Save All Changes</button>
+                    </div>
+                </div>
+                <div id="ev-services" class="tab-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-bolt"></i> EV Services</h3>
+                            <button class="btn-add" onclick="addEvService()"><i class="fas fa-plus"></i> Add Service</button>
+                        </div>
+                        <div id="ev-services-form"></div>
+                        <button class="btn-save" onclick="saveEvServices()"><i class="fas fa-save"></i> Save All Changes</button>
+                    </div>
+                </div>
+            </section>
+            <section id="advertisement-section" class="tab-content">
+                <h2 class="section-title"><i class="fas fa-bullhorn"></i> Manage Advertisement/Offer</h2>
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-bullhorn"></i> Advertisement Banner</h3>
+                    </div>
+                    <div class="toggle-container">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="ad-enable" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <span class="toggle-label">Enable Advertisement Banner</span>
+                    </div>
+                    <div class="form-group">
+                        <label>Advertisement Title</label>
+                        <input type="text" id="ad-title" placeholder="e.g., Get 20% Off on First Service!">
+                    </div>
+                    <div class="form-group">
+                        <label>Advertisement Description</label>
+                        <textarea id="ad-desc" placeholder="e.g., Book your first service and avail 20% discount!"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Button Text</label>
+                        <input type="text" id="ad-btn-text" placeholder="e.g., Book Now">
+                    </div>
+                    <div class="form-group">
+                        <label>Button Link</label>
+                        <input type="text" id="ad-btn-link" placeholder="e.g., booking.html">
+                    </div>
+                    <div class="form-group">
+                        <label>Background Color (Hex Code)</label>
+                        <input type="text" id="ad-bg-color" placeholder="e.g., #ff2a2a or linear-gradient">
+                    </div>
+                    <div class="form-group">
+                        <label>Banner Image URL (Optional)</label>
+                        <input type="text" id="ad-image-url" placeholder="e.g., https://example.com/banner.jpg">
+                    </div>
+                    <button class="btn-save" onclick="saveAdvertisement()"><i class="fas fa-save"></i> Save Advertisement</button>
+                </div>
+            </section>
+            <section id="testimonials-section" class="tab-content">
+                <h2 class="section-title"><i class="fas fa-comments"></i> Manage Testimonials</h2>
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-users"></i> Customer Reviews</h3>
+                    </div>
+                    <div id="testimonials-form"></div>
+                    <button class="btn-save" onclick="saveTestimonials()"><i class="fas fa-save"></i> Save All Changes</button>
+                </div>
+            </section>
+            <section id="team-section" class="tab-content">
+                <h2 class="section-title"><i class="fas fa-users"></i> Manage Team Members</h2>
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-user-tie"></i> Team Member Details</h3>
+                    </div>
+                    <div id="team-form"></div>
+                    <button class="btn-save" onclick="saveTeam()"><i class="fas fa-save"></i> Save All Changes</button>
+                </div>
+            </section>
+            <section id="stats-section" class="tab-content">
+                <h2 class="section-title"><i class="fas fa-chart-bar"></i> Manage Stats</h2>
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-tachometer-alt"></i> Website Statistics</h3>
+                    </div>
+                    <div class="stats-grid" id="stats-form"></div>
+                    <button class="btn-save" onclick="saveStats()"><i class="fas fa-save"></i> Save All Changes</button>
+                </div>
+            </section>
+            <section id="about-section" class="tab-content">
+                <h2 class="section-title"><i class="fas fa-info-circle"></i> Manage About Page</h2>
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-file-alt"></i> About Content</h3>
+                    </div>
+                    <div id="about-form"></div>
+                    <button class="btn-save" onclick="saveAbout()"><i class="fas fa-save"></i> Save All Changes</button>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script>
+        if (!sessionStorage.getItem('adminLoggedIn')) {
+            window.location.href = 'admin-login.html';
+        }
+        const defaultData = {
+            bikeServices: [{
+                id: 1,
+                name: 'Bike General Service',
+                desc: 'Full bike servicing with engine tune-up, brake check, and tire inspection.',
+                price: '₹249'
+            }, {
+                id: 2,
+                name: 'Bike Chain Replacement',
+                desc: 'Chain and sprocket replacement for smooth bike operation.',
+                price: '₹999'
+            }, {
+                id: 3,
+                name: 'Bike Oil Change',
+                desc: 'Engine oil replacement and filter change for optimal performance.',
+                price: '₹389'
+            }, {
+                id: 4,
+                name: 'Bike Brake Service',
+                desc: 'Brake pad replacement and adjustment for safety.',
+                price: '₹399'
+            }, {
+                id: 5,
+                name: 'Bike Suspension Repair',
+                desc: 'Suspension system repair and adjustment.',
+                price: '₹400'
+            }],
+            evServices: [{
+                id: 1,
+                name: 'EV Scooter Repair',
+                desc: 'Specialized repair for electric scooters including battery and motor diagnostics.',
+                price: '₹499'
+            }, {
+                id: 2,
+                name: 'EV Battery Service',
+                desc: 'Battery testing and replacement for EVs.',
+                price: '₹199'
+            }, {
+                id: 3,
+                name: 'EV Motor Repair',
+                desc: 'Motor diagnostics and repair for electric vehicles.',
+                price: '₹349'
+            }, {
+                id: 4,
+                name: 'EV Charging Port Repair',
+                desc: 'Charging port diagnostics and repair.',
+                price: '₹649'
+            }],
+            advertisement: {
+                enabled: true,
+                title: '🎉 Get 20% Off on First Service!',
+                desc: 'Book your first service and avail 20% discount! Limited time offer.',
+                btnText: 'Book Now',
+                btnLink: 'booking.html',
+                bgColor: 'linear-gradient(135deg, #ff2a2a, #e02424)'
+            },
+            testimonials: [{
+                id: 1,
+                name: 'Rajesh Kumar',
+                text: 'Excellent service! The mechanic came to my home and fixed my bike within an hour. Very professional and affordable.'
+            }, {
+                id: 2,
+                name: 'Priya Sharma',
+                text: 'Best car service in Umred! They use genuine parts and the pricing is very transparent. Highly recommended!'
+            }, {
+                id: 3,
+                name: 'Akash Mishra',
+                text: 'Great experience with my EV scooter service. The team is knowledgeable and the service was quick. Will definitely come back!'
+            }],
+            team: [{
+                id: 1,
+                name: 'Harsh Somalvar',
+                initials: 'HS',
+                role: 'Chief Mechanic',
+                desc: '07+ years of experience in automotive repair and maintenance. Expert in car and bike diagnostics.'
+            }, {
+                id: 2,
+                name: 'Kartik Sawarkar',
+                initials: 'KS',
+                role: 'Service Manager',
+                desc: 'Expert in customer service and quality assurance. Ensures every customer gets the best experience.'
+            }, {
+                id: 3,
+                name: 'Rupesh Khadse',
+                initials: 'RK',
+                role: 'EV Specialist',
+                desc: 'Certified in electric vehicle repairs and maintenance. Handles all EV-related services.'
+            }],
+            stats: {
+                customers: '5000+',
+                experience: '10+',
+                mechanics: '15+',
+                rating: '4.9'
+            },
+            about: {
+                title: 'Welcome to Automobile Gallery',
+                desc1: 'Founded in 2025, we have been providing top-notch automotive solutions to thousands of satisfied customers across the region.',
+                desc2: 'Whether it\'s routine maintenance, emergency repairs, or specialized services, we\'re here to keep you on the road safely and efficiently.',
+                mission: 'At Automobile Gallery, our mission is to revolutionize the way people maintain their vehicles.'
+            }
+        };
+
+        function getData() {
+            const stored = localStorage.getItem('autoGalleryData');
+            return stored ? JSON.parse(stored) : defaultData;
+        }
+
+        function saveData(data) {
+            localStorage.setItem('autoGalleryData', JSON.stringify(data));
+        }
+
+        let bikeServiceCount = 0;
+        let evServiceCount = 0;
+
+        function initForms() {
+            const data = getData();
+            bikeServiceCount = data.bikeServices.length;
+            evServiceCount = data.evServices.length;
+
+            let bikeHtml = '';
+            data.bikeServices.forEach((service, index) => {
+                bikeHtml += `<div class="service-item"><div class="form-group"><label>Service Name</label><input type="text" id="bike-name-${index}" value="${service.name}"></div><div class="form-group"><label>Description</label><textarea id="bike-desc-${index}">${service.desc}</textarea></div><div class="form-group"><label>Price (₹)</label><input type="text" id="bike-price-${index}" value="${service.price}"></div><button class="delete-btn" onclick="deleteBikeService(${index})"><i class="fas fa-trash"></i></button></div>`;
+            });
+            document.getElementById('bike-services-form').innerHTML = bikeHtml;
+
+            let evHtml = '';
+            data.evServices.forEach((service, index) => {
+                evHtml += `<div class="service-item"><div class="form-group"><label>Service Name</label><input type="text" id="ev-name-${index}" value="${service.name}"></div><div class="form-group"><label>Description</label><textarea id="ev-desc-${index}">${service.desc}</textarea></div><div class="form-group"><label>Price (₹)</label><input type="text" id="ev-price-${index}" value="${service.price}"></div><button class="delete-btn" onclick="deleteEvService(${index})"><i class="fas fa-trash"></i></button></div>`;
+            });
+            document.getElementById('ev-services-form').innerHTML = evHtml;
+
+            document.getElementById('ad-enable').checked = data.advertisement.enabled;
+            document.getElementById('ad-title').value = data.advertisement.title || '';
+            document.getElementById('ad-desc').value = data.advertisement.desc || '';
+            document.getElementById('ad-btn-text').value = data.advertisement.btnText || '';
+            document.getElementById('ad-btn-link').value = data.advertisement.btnLink || '';
+            document.getElementById('ad-bg-color').value = data.advertisement.bgColor || '';
+            document.getElementById('ad-image-url').value = data.advertisement.imageUrl || '';
+
+            let testHtml = '';
+            data.testimonials.forEach((test, index) => {
+                testHtml += `<div class="form-group"><label>Review ${index + 1} - Name</label><input type="text" id="test-name-${index}" value="${test.name}"></div><div class="form-group"><label>Review ${index + 1} - Text</label><textarea id="test-text-${index}">${test.text}</textarea></div>`;
+            });
+            document.getElementById('testimonials-form').innerHTML = testHtml;
+
+            let teamHtml = '';
+            data.team.forEach((member, index) => {
+                teamHtml += `<div class="form-group"><label>Member ${index + 1} - Name</label><input type="text" id="team-name-${index}" value="${member.name}"></div><div class="form-group"><label>Initials (for avatar)</label><input type="text" id="team-initials-${index}" value="${member.initials}" maxlength="2"></div><div class="form-group"><label>Role</label><input type="text" id="team-role-${index}" value="${member.role}"></div><div class="form-group"><label>Description</label><textarea id="team-desc-${index}">${member.desc}</textarea></div>`;
+            });
+            document.getElementById('team-form').innerHTML = teamHtml;
+
+            document.getElementById('stats-form').innerHTML = `<div class="stat-item"><label>Happy Customers</label><input type="text" id="stat-customers" value="${data.stats.customers}"></div><div class="stat-item"><label>Years Experience</label><input type="text" id="stat-experience" value="${data.stats.experience}"></div><div class="stat-item"><label>Expert Mechanics</label><input type="text" id="stat-mechanics" value="${data.stats.mechanics}"></div><div class="stat-item"><label>Customer Rating</label><input type="text" id="stat-rating" value="${data.stats.rating}"></div>`;
+
+            document.getElementById('about-form').innerHTML = `<div class="form-group"><label>About Title</label><input type="text" id="about-title" value="${data.about.title}"></div><div class="form-group"><label>About Description 1</label><textarea id="about-desc1">${data.about.desc1}</textarea></div><div class="form-group"><label>About Description 2</label><textarea id="about-desc2">${data.about.desc2}</textarea></div><div class="form-group"><label>Mission</label><textarea id="about-mission">${data.about.mission}</textarea></div>`;
+        }
+
+        function addBikeService() {
+            const data = getData();
+            data.bikeServices.push({
+                id: Date.now(),
+                name: 'New Service',
+                desc: 'Service description',
+                price: '₹0'
+            });
+            saveData(data);
+            bikeServiceCount++;
+            initForms();
+            showSuccess();
+        }
+
+        function addEvService() {
+            const data = getData();
+            data.evServices.push({
+                id: Date.now(),
+                name: 'New Service',
+                desc: 'Service description',
+                price: '₹0'
+            });
+            saveData(data);
+            evServiceCount++;
+            initForms();
+            showSuccess();
+        }
+
+        function deleteBikeService(index) {
+            const data = getData();
+            if (confirm('Delete this service?')) {
+                data.bikeServices.splice(index, 1);
+                saveData(data);
+                initForms();
+                showSuccess();
+            }
+        }
+
+        function deleteEvService(index) {
+            const data = getData();
+            if (confirm('Delete this service?')) {
+                data.evServices.splice(index, 1);
+                saveData(data);
+                initForms();
+                showSuccess();
+            }
+        }
+
+        function saveBikeServices() {
+            const data = getData();
+            data.bikeServices = [];
+            for (let i = 0; i < bikeServiceCount; i++) {
+                if (document.getElementById(`bike-name-${i}`)) {
+                    data.bikeServices.push({
+                        name: document.getElementById(`bike-name-${i}`).value,
+                        desc: document.getElementById(`bike-desc-${i}`).value,
+                        price: document.getElementById(`bike-price-${i}`).value
+                    });
+                }
+            }
+            saveData(data);
+            showSuccess();
+        }
+
+        function saveEvServices() {
+            const data = getData();
+            data.evServices = [];
+            for (let i = 0; i < evServiceCount; i++) {
+                if (document.getElementById(`ev-name-${i}`)) {
+                    data.evServices.push({
+                        name: document.getElementById(`ev-name-${i}`).value,
+                        desc: document.getElementById(`ev-desc-${i}`).value,
+                        price: document.getElementById(`ev-price-${i}`).value
+                    });
+                }
+            }
+            saveData(data);
+            showSuccess();
+        }
+
+        function saveAdvertisement() {
+            const data = getData();
+            data.advertisement = {
+                enabled: document.getElementById('ad-enable').checked,
+                title: document.getElementById('ad-title').value,
+                desc: document.getElementById('ad-desc').value,
+                btnText: document.getElementById('ad-btn-text').value,
+                btnLink: document.getElementById('ad-btn-link').value,
+                bgColor: document.getElementById('ad-bg-color').value,
+                imageUrl: document.getElementById('ad-image-url').value
+            };
+            saveData(data);
+            showSuccess();
+        }
+
+        function saveTestimonials() {
+            const data = getData();
+            const count = document.querySelectorAll('[id^="test-name-"]').length;
+            data.testimonials = [];
+            for (let i = 0; i < count; i++) {
+                if (document.getElementById(`test-name-${i}`)) {
+                    data.testimonials.push({
+                        name: document.getElementById(`test-name-${i}`).value,
+                        text: document.getElementById(`test-text-${i}`).value
+                    });
+                }
+            }
+            saveData(data);
+            showSuccess();
+        }
+
+        function saveTeam() {
+            const data = getData();
+            const count = document.querySelectorAll('[id^="team-name-"]').length;
+            data.team = [];
+            for (let i = 0; i < count; i++) {
+                if (document.getElementById(`team-name-${i}`)) {
+                    data.team.push({
+                        name: document.getElementById(`team-name-${i}`).value,
+                        initials: document.getElementById(`team-initials-${i}`).value,
+                        role: document.getElementById(`team-role-${i}`).value,
+                        desc: document.getElementById(`team-desc-${i}`).value
+                    });
+                }
+            }
+            saveData(data);
+            showSuccess();
+        }
+
+        function saveStats() {
+            const data = getData();
+            data.stats = {
+                customers: document.getElementById('stat-customers').value,
+                experience: document.getElementById('stat-experience').value,
+                mechanics: document.getElementById('stat-mechanics').value,
+                rating: document.getElementById('stat-rating').value
+            };
+            saveData(data);
+            showSuccess();
+        }
+
+        function saveAbout() {
+            const data = getData();
+            data.about = {
+                title: document.getElementById('about-title').value,
+                desc1: document.getElementById('about-desc1').value,
+                desc2: document.getElementById('about-desc2').value,
+                mission: document.getElementById('about-mission').value
+            };
+            saveData(data);
+            showSuccess();
+        }
+
+        function showSuccess() {
+            const msg = document.getElementById('successMsg');
+            msg.classList.add('show');
+            setTimeout(() => msg.classList.remove('show'), 3000);
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.getElementById(`${sectionId}-section`).classList.add('active');
+            document.querySelectorAll('.sidebar-menu a').forEach(el => el.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Close mobile menu when section is clicked
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            }
+        }
+
+        function showServiceTab(tab) {
+            document.querySelectorAll('#services-section .tab-content').forEach(el => el.classList.remove('active'));
+            document.getElementById(`${tab}-services`).classList.add('active');
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function logout() {
+            sessionStorage.removeItem('adminLoggedIn');
+            window.location.href = 'admin-login.html';
+        }
+
+        function toggleMobileMenu() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        window.addEventListener('load', initForms);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book Service - Automobile Gallery</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+         :root {
+            --primary: #ff2a2a;
+            --primary-dark: #e02424;
+            --primary-light: #ff5252;
+            --dark: #1a1a1a;
+            --light: #ffffff;
+            --gray: #f5f5f5;
+            --text: #333333;
+            --text-light: #666666;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 0.8s ease-out;
+        }
+        
+        .loading-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .loader {
+            text-align: center;
+        }
+        
+        .loader-icon {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 42, 42, 0.2);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .loader-text {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            padding: 15px 40px;
+            color: var(--light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        header h1 {
+            color: var(--primary);
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        nav {
+            display: flex;
+            gap: 25px;
+        }
+        
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            padding: 5px 0;
+            transition: color 0.3s;
+        }
+        
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+        
+        nav a:hover {
+            color: var(--primary);
+        }
+        
+        nav a:hover::after {
+            width: 100%;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .page-header {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1920&q=80') center/cover;
+            padding: 60px 20px;
+            text-align: center;
+            color: var(--light);
+        }
+        
+        .page-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .page-header p {
+            opacity: 0.9;
+        }
+        
+        .booking-section {
+            padding: 50px 20px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .booking-card {
+            background: var(--light);
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: var(--shadow);
+        }
+        
+        .booking-card h2 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+        }
+        
+        .booking-card .subtitle {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 30px;
+        }
+        
+        .vehicle-type-section {
+            margin-bottom: 30px;
+        }
+        
+        .vehicle-type-section label {
+            display: block;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+        
+        .vehicle-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .vehicle-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            border: 2px solid #eee;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: var(--gray);
+        }
+        
+        .vehicle-option:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .vehicle-option.selected {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, #fff5f5 0%, #ffeaea 100%);
+        }
+        
+        .vehicle-option i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .vehicle-option span {
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #eee;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .btn {
+            padding: 16px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+            width: 100%;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary), var(--primary-dark));
+            color: var(--light);
+            box-shadow: 0 5px 20px rgba(255, 42, 42, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 42, 42, 0.4);
+        }
+        
+        .alt-booking {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #eee;
+        }
+        
+        .alt-booking p {
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+        
+        .alt-btns {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .alt-btn {
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all;
+        }
+        
+        .alt-btn-call {
+            background: var(--primary);
+            color: var(--light);
+        }
+        
+        .alt-btn-call:hover {
+            background: var(--primary-dark);
+        }
+        
+        .alt-btn-whatsapp {
+            background: #25D366;
+            color: var(--light);
+        }
+        
+        .alt-btn-whatsapp:hover {
+            background: #128C7E;
+        }
+        
+        footer {
+            background: var(--dark);
+            padding: 30px 20px 20px;
+            color: var(--light);
+            text-align: center;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-content .branding {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .footer-content .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .footer-content .contact-info p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+        
+        .footer-content .contact-info a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .footer-content .copyright {
+            font-size: 0.85rem;
+            opacity: 0.7;
+        }
+        
+        .floating-buttons {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .floating-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--light);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        
+        .floating-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .sos-btn {
+            background: linear-gradient(45deg, var(--primary), #cc0000);
+        }
+        
+        .whatsapp-btn {
+            background: #25D366;
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+                flex-wrap: wrap;
+            }
+            .mobile-menu-btn {
+                display: block;
+            }
+            nav {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--dark);
+                flex-direction: column;
+                padding: 20px;
+                gap: 15px;
+            }
+            nav.active {
+                display: flex;
+            }
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            .booking-card {
+                padding: 25px;
+            }
+            .vehicle-options {
+                grid-template-columns: 1fr;
+            }
+            .alt-btns {
+                flex-direction: column;
+            }
+            .alt-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .footer-content .contact-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loader">
+            <div class="loader-icon"></div>
+            <div class="loader-text">Loading...</div>
+        </div>
+    </div>
+
+    <header>
+        <h1>Automobile Gallery</h1>
+        <button class="mobile-menu-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+        <nav id="main-nav">
+            <a href="index.html">Home</a>
+            <a href="services.html">Services</a>
+            <a href="booking.html">Booking</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+    </header>
+
+    <section class="page-header">
+        <h1>Book Your Service</h1>
+        <p>Schedule your vehicle service in just a few clicks</p>
+    </section>
+
+    <section class="booking-section">
+        <div class="booking-card">
+            <h2><i class="fas fa-calendar-check"></i> Service Booking</h2>
+            <p class="subtitle">Fill in the details below to book your service</p>
+
+            <form id="booking-form">
+                <div class="vehicle-type-section">
+                    <label>Select Vehicle Type</label>
+                    <div class="vehicle-options">
+                        <div class="vehicle-option" data-type="bike" onclick="selectVehicle('bike')">
+                            <i class="fas fa-motorcycle"></i>
+                            <span>Bike</span>
+                        </div>
+                        <div class="vehicle-option" data-type="ev" onclick="selectVehicle('ev')">
+                            <i class="fas fa-bolt"></i>
+                            <span>EV</span>
+                        </div>
+                    </div>
+                    <input type="hidden" id="vehicle-type" name="vehicle-type" value="">
+                </div>
+
+                <div class="form-group">
+                    <label for="name">Full Name *</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email">
+                </div>
+
+                <div class="form-group">
+                    <label for="service">Select Service *</label>
+                    <select id="service" name="service" required>
+                        <option value="">Choose a service</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="location">Your Location *</label>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <input type="text" id="location" name="location" placeholder="Enter your location or use live location" required style="flex: 1;">
+                        <button type="button" onclick="getLocation()" style="padding: 14px 20px; border: 2px solid var(--primary); border-radius: 12px; background: var(--light); color: var(--primary); cursor: pointer; font-weight: 600; white-space: nowrap;">
+                            <i class="fas fa-map-marker-alt"></i> Get Live Location
+                        </button>
+                    </div>
+                    <p id="location-status" style="margin-top: 8px; font-size: 0.85rem; color: var(--text-light);"></p>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Additional Message</label>
+                    <textarea id="message" name="message" rows="3" placeholder="Any specific requirements?"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i> Submit Booking
+                </button>
+            </form>
+
+            <div class="alt-booking">
+                <p>Or book directly via:</p>
+                <div class="alt-btns">
+                    <a href="tel:+919527460785" class="alt-btn alt-btn-call">
+                        <i class="fas fa-phone-alt"></i> Call Now
+                    </a>
+                    <a href="https://wa.me/+919527460785" class="alt-btn alt-btn-whatsapp" target="_blank">
+                        <i class="fab fa-whatsapp"></i> WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="branding">Automobile Gallery</div>
+            <div class="contact-info">
+                <p><i class="fas fa-phone"></i> +91 9527460785</p>
+                <p><i class="fas fa-envelope"></i> <a href="mailto:trading4u4@gmail.com">trading4u4@gmail.com</a></p>
+                <p><i class="fas fa-map-marker-alt"></i> New MIDC, Umred</p>
+            </div>
+            <div class="copyright">© 2025 Automobile Gallery | All Rights Reserved</div>
+        </div>
+    </footer>
+
+    <div class="floating-buttons">
+        <a href="tel:+919527460785" class="floating-btn sos-btn" title="Call Us"><i class="fas fa-phone"></i></a>
+        <a href="https://wa.me/+919527460785" class="floating-btn whatsapp-btn" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+    </div>
+
+    <script>
+        const servicesData = {
+            bike: [{
+                value: 'bike-general',
+                name: 'Bike General Service'
+            }, {
+                value: 'bike-chain-replacement',
+                name: 'Bike Chain Replacement'
+            }, {
+                value: 'bike-tire-change',
+                name: 'Bike Tire Change'
+            }, {
+                value: 'bike-oil-change',
+                name: 'Bike Oil Change'
+            }, {
+                value: 'bike-brake-service',
+                name: 'Bike Brake Service'
+            }, {
+                value: 'bike-suspension-repair',
+                name: 'Bike Suspension Repair'
+            }, {
+                value: 'bike-electrical-repair',
+                name: 'Bike Electrical Repair'
+            }],
+            ev: [{
+                value: 'ev-scooter-repair',
+                name: 'EV Scooter Repair'
+            }, {
+                value: 'ev-battery-service',
+                name: 'EV Battery Service'
+            }, {
+                value: 'ev-motor-repair',
+                name: 'EV Motor Repair'
+            }, {
+                value: 'ev-charging-port-repair',
+                name: 'EV Charging Port Repair'
+            }, {
+                value: 'ev-dashboard-repair',
+                name: 'EV Dashboard Repair'
+            }, {
+                value: 'ev-connectivity-repair',
+                name: 'EV Connectivity Repair'
+            }]
+        };
+
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('loading-overlay').classList.add('hidden');
+            }, 1500);
+        });
+
+        function toggleMenu() {
+            document.getElementById('main-nav').classList.toggle('active');
+        }
+
+        function selectVehicle(type) {
+            document.querySelectorAll('.vehicle-option').forEach(opt => opt.classList.remove('selected'));
+            document.querySelector('[data-type="' + type + '"]').classList.add('selected');
+            document.getElementById('vehicle-type').value = type;
+            populateServices(type);
+        }
+
+        function populateServices(vehicleType) {
+            const serviceSelect = document.getElementById('service');
+            serviceSelect.innerHTML = '<option value="">Choose a service</option>';
+            if (servicesData[vehicleType]) {
+                servicesData[vehicleType].forEach(service => {
+                    const option = document.createElement('option');
+                    option.value = service.value;
+                    option.textContent = service.name;
+                    serviceSelect.appendChild(option);
+                });
+            }
+        }
+
+        document.getElementById('booking-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const vehicleType = document.getElementById('vehicle-type').value;
+            if (!vehicleType) {
+                alert('Please select a vehicle type.');
+                return;
+            }
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value;
+            const location = document.getElementById('location').value;
+            const service = document.getElementById('service').value;
+            const message = document.getElementById('message').value;
+
+            let locationPart = '';
+            if (location.includes('https://maps.google.com') || location.includes('geo:')) {
+                locationPart = '📍 *Live Location:* ' + location + '\n';
+            } else if (location) {
+                locationPart = '📍 *Location:* ' + location + '\n';
+            }
+
+            const whatsappMessage = '*New Booking Request:*\n\n' +
+                '🚗 *Vehicle Type:* ' + vehicleType.toUpperCase() + '\n' +
+                '👤 *Name:* ' + name + '\n' +
+                '📱 *Phone:* ' + phone + '\n' +
+                '📧 *Email:* ' + (email || 'Not provided') + '\n' +
+                locationPart +
+                '🔧 *Service:* ' + service + '\n' +
+                '💬 *Message:* ' + (message || 'None');
+
+            const whatsappUrl = 'https://wa.me/+919527460785?text=' + encodeURIComponent(whatsappMessage);
+            window.open(whatsappUrl, '_blank');
+            alert('Thank you! Your booking request has been sent via WhatsApp.');
+            this.reset();
+            document.getElementById('location').value = '';
+            document.getElementById('location-status').textContent = '';
+            document.querySelectorAll('.vehicle-option').forEach(opt => opt.classList.remove('selected'));
+        });
+
+        function getLocation() {
+            const statusElement = document.getElementById('location-status');
+            const locationInput = document.getElementById('location');
+
+            if (!navigator.geolocation) {
+                statusElement.textContent = 'Geolocation is not supported by your browser.';
+                statusElement.style.color = 'red';
+                return;
+            }
+
+            statusElement.textContent = 'Getting your location...';
+            statusElement.style.color = 'var(--text-light)';
+
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    const googleMapsUrl = 'https://maps.google.com/?q=' + lat + ',' + lng;
+                    locationInput.value = googleMapsUrl;
+                    statusElement.textContent = '✓ Location captured! Click to view on map.';
+                    statusElement.style.color = 'green';
+                },
+                function(error) {
+                    let errorMessage = 'Unable to get location. ';
+                    switch (error.code) {
+                        case error.PERMISSION_DENIED:
+                            errorMessage += 'Please allow location access.';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            errorMessage += 'Location information unavailable.';
+                            break;
+                        case error.TIMEOUT:
+                            errorMessage += 'Location request timed out.';
+                            break;
+                        default:
+                            errorMessage += 'Unknown error.';
+                    }
+                    statusElement.textContent = errorMessage;
+                    statusElement.style.color = 'red';
+                }, {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                }
+            );
+        }
+    </script>
+</body>
+
+</html>
