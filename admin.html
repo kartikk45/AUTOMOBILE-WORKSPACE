@@ -336,7 +336,7 @@
             color: var(--dark);
         }
         
-        .service-item {
+        .servAice-item {
             background: var(--gray);
             padding: 15px;
             border-radius: 10px;
@@ -741,13 +741,37 @@
 
             let bikeHtml = '';
             data.bikeServices.forEach((service, index) => {
-                bikeHtml += `<div class="service-item"><div class="form-group"><label>Service Name</label><input type="text" id="bike-name-${index}" value="${service.name}"></div><div class="form-group"><label>Description</label><textarea id="bike-desc-${index}">${service.desc}</textarea></div><div class="form-group"><label>Price (₹)</label><input type="text" id="bike-price-${index}" value="${service.price}"></div><button class="delete-btn" onclick="deleteBikeService(${index})"><i class="fas fa-trash"></i></button></div>`;
+                const isEnabled = service.enabled !== false;
+                bikeHtml += `<div class="service-item">
+                    <div class="toggle-container">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="bike-enabled-${index}" ${isEnabled ? 'checked' : ''}>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <span class="toggle-label">Service Active</span>
+                    </div>
+                    <div class="form-group"><label>Service Name</label><input type="text" id="bike-name-${index}" value="${service.name}"></div>
+                    <div class="form-group"><label>Description</label><textarea id="bike-desc-${index}">${service.desc}</textarea></div>
+                    <div class="form-group"><label>Price (₹)</label><input type="text" id="bike-price-${index}" value="${service.price}"></div>
+                    <button class="delete-btn" onclick="deleteBikeService(${index})"><i class="fas fa-trash"></i></button></div>`;
             });
             document.getElementById('bike-services-form').innerHTML = bikeHtml;
 
             let evHtml = '';
             data.evServices.forEach((service, index) => {
-                evHtml += `<div class="service-item"><div class="form-group"><label>Service Name</label><input type="text" id="ev-name-${index}" value="${service.name}"></div><div class="form-group"><label>Description</label><textarea id="ev-desc-${index}">${service.desc}</textarea></div><div class="form-group"><label>Price (₹)</label><input type="text" id="ev-price-${index}" value="${service.price}"></div><button class="delete-btn" onclick="deleteEvService(${index})"><i class="fas fa-trash"></i></button></div>`;
+                const isEnabled = service.enabled !== false;
+                evHtml += `<div class="service-item">
+                    <div class="toggle-container">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="ev-enabled-${index}" ${isEnabled ? 'checked' : ''}>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <span class="toggle-label">Service Active</span>
+                    </div>
+                    <div class="form-group"><label>Service Name</label><input type="text" id="ev-name-${index}" value="${service.name}"></div>
+                    <div class="form-group"><label>Description</label><textarea id="ev-desc-${index}">${service.desc}</textarea></div>
+                    <div class="form-group"><label>Price (₹)</label><input type="text" id="ev-price-${index}" value="${service.price}"></div>
+                    <button class="delete-btn" onclick="deleteEvService(${index})"><i class="fas fa-trash"></i></button></div>`;
             });
             document.getElementById('ev-services-form').innerHTML = evHtml;
 
@@ -832,7 +856,8 @@
                     data.bikeServices.push({
                         name: document.getElementById(`bike-name-${i}`).value,
                         desc: document.getElementById(`bike-desc-${i}`).value,
-                        price: document.getElementById(`bike-price-${i}`).value
+                        price: document.getElementById(`bike-price-${i}`).value,
+                        enabled: document.getElementById(`bike-enabled-${i}`) ? document.getElementById(`bike-enabled-${i}`).checked : true
                     });
                 }
             }
@@ -848,7 +873,8 @@
                     data.evServices.push({
                         name: document.getElementById(`ev-name-${i}`).value,
                         desc: document.getElementById(`ev-desc-${i}`).value,
-                        price: document.getElementById(`ev-price-${i}`).value
+                        price: document.getElementById(`ev-price-${i}`).value,
+                        enabled: document.getElementById(`ev-enabled-${i}`) ? document.getElementById(`ev-enabled-${i}`).checked : true
                     });
                 }
             }
