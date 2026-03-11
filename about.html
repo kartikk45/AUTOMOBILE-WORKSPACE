@@ -796,8 +796,66 @@
     </div>
 
     <script>
+        // Default data
+        const defaultData = {
+            team: [{
+                name: 'Harsh Somalvar',
+                initials: 'HS',
+                role: 'Chief Mechanic',
+                desc: '07+ years of experience in automotive repair and maintenance. Expert in car and bike diagnostics.'
+            }, {
+                name: 'Kartik Sawarkar',
+                initials: 'KS',
+                role: 'Service Manager',
+                desc: 'Expert in customer service and quality assurance. Ensures every customer gets the best experience.'
+            }, {
+                name: 'Rupesh Khadse',
+                initials: 'RK',
+                role: 'EV Specialist',
+                desc: 'Certified in electric vehicle repairs and maintenance. Handles all EV-related services.'
+            }],
+            stats: {
+                customers: '5000+',
+                experience: '10+',
+                mechanics: '15+',
+                rating: '4.9'
+            }
+        };
+
+        function getData() {
+            const stored = localStorage.getItem('autoGalleryData');
+            return stored ? JSON.parse(stored) : defaultData;
+        }
+
+        function loadTeam() {
+            const data = getData();
+            const teamContainer = document.querySelector('.team-grid');
+            let teamHtml = '';
+            data.team.forEach(member => {
+                teamHtml += `<div class="team-card">
+                    <div class="team-avatar">${member.initials}</div>
+                    <h3>${member.name}</h3>
+                    <div class="role">${member.role}</div>
+                    <p>${member.desc}</p>
+                </div>`;
+            });
+            teamContainer.innerHTML = teamHtml;
+        }
+
+        function loadStats() {
+            const data = getData();
+            const stats = data.stats || defaultData.stats;
+
+            document.querySelector('.stats-section .stat-item:nth-child(1) .stat-number').textContent = stats.customers;
+            document.querySelector('.stats-section .stat-item:nth-child(2) .stat-number').textContent = stats.experience;
+            document.querySelector('.stats-section .stat-item:nth-child(3) .stat-number').textContent = stats.mechanics;
+            document.querySelector('.stats-section .stat-item:nth-child(4) .stat-number').textContent = stats.rating;
+        }
+
         // Loading animation
         window.addEventListener('load', function() {
+            loadTeam();
+            loadStats();
             setTimeout(function() {
                 const overlay = document.getElementById('loading-overlay');
                 overlay.classList.add('hidden');
